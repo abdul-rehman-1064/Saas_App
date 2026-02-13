@@ -14,13 +14,29 @@ exports.getSettings = async (req, res) => {
 // Update settings from Dashboard
 exports.updateSettings = async (req, res) => {
   try {
-    const { businessName, supportEmail, knowledgeBase } = req.body;
+    const { businessName, supportEmail, knowledgeBase, primaryColor } = req.body;
     const settings = await Chatbot.findOneAndUpdate(
       { userId: req.user.id },
-      { businessName, supportEmail, knowledgeBase },
+      { businessName, supportEmail, knowledgeBase, primaryColor },
       { new: true }
     );
     res.json(settings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// PUBLIC: Get widget config for embed script (color, business name)
+exports.getWidgetConfig = async (req, res) => {
+  try {
+    const { chatbotId } = req.params;
+    const config = await Chatbot.findOne({ userId: chatbotId });
+    if (!config) return res.status(404).json({ message: "Bot not found" });
+    
+    res.json({
+      businessName: config.businessName,
+      primaryColor: config.primaryColor || '#4f46e5'
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

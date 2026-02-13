@@ -25,7 +25,8 @@ router.post('/auth/login', authController.login);
 router.get('/chatbot/settings', verifyToken, chatbotController.getSettings);
 router.put('/chatbot/settings', verifyToken, chatbotController.updateSettings);
 
-// Public Widget Route (No Auth required, used by external sites)
+// Public Widget Routes (No Auth required, used by external sites)
+router.get('/widget/config/:chatbotId', chatbotController.getWidgetConfig);
 router.post('/widget/chat', chatbotController.chatWithAI);
 
 module.exports = router;
